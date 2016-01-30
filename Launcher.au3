@@ -6,7 +6,6 @@ $charactersRaw = IniReadSection("config.ini", "Characters")
 $y = 10
 $charsCount = $charactersRaw[0][0]
 $width = $charsCount * 27 + 17
-Local $buttonsId[$charsCount]
 Local $chars[$charsCount][4]
 
 ;GUI draw
