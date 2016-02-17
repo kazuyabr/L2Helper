@@ -17,6 +17,7 @@ Func Login($login, $pass, $name)
 
    ;Login
    ControlSend($windowHandle, "", "", $login)
+   Sleep(200)
    ControlSend($windowHandle, "", "", "{TAB}")
    ControlSend($windowHandle, "", "", $pass)
    While 1
