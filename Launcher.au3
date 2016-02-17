@@ -2,6 +2,7 @@
 #include <Constants.au3>
 #include <GUIConstantsEx.au3>
 
+;Reading all accounts info from ini
 $charactersRaw = IniReadSection("config.ini", "Characters")
 $y = 10
 $charsCount = $charactersRaw[0][0]
