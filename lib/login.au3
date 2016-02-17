@@ -1,3 +1,6 @@
+#include-once
+#include <AutoItConstants.au3>
+
 Func Login($login, $pass, $name)
    $startZeroPixel = 1212604
    $endZeroPixel = 526344
@@ -16,7 +19,7 @@ Func Login($login, $pass, $name)
    WEnd
 
    ;Login
-   ControlSend($windowHandle, "", "", $login)
+   ControlSend($windowHandle, "", "", $login, $SEND_RAW)
    Sleep(200)
    ControlSend($windowHandle, "", "", "{TAB}")
    ControlSend($windowHandle, "", "", $pass)
