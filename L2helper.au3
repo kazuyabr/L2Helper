@@ -1,13 +1,18 @@
 #NoTrayIcon
 #include <lib/login.au3>
 #include <StringConstants.au3>
+#include <MsgBoxConstants.au3>
 
 If $cmdLine[0] = 0 Then
+	MsgBox($MB_OK, "Ошибка", "Используйте Launcher.exe для запуска")
    Exit
 EndIf
 
 
-Login($cmdLine[1], $cmdLine[2], $cmdLine[3])
+If not Login($cmdLine[1], $cmdLine[2], $cmdLine[3]) Then
+	MsgBox($MB_OK, "Ошибка", "Окно L2 было закрыто в процессе загрузки")
+EndIf
+
 $windowSize = WinGetClientSize($windowHandle)
 
 ;Main cycle where we waiting commands from launcher(in future versions)
