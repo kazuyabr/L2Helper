@@ -34,7 +34,7 @@ Func Login($login, $pass, $name)
 
 		$pixel = PixelGetColor(0, 0, $windowHandle)
 		If $endZeroPixel = $pixel Then
-			ExitLoop
+			Return True
 		EndIf
 
 		ControlSend($windowHandle, "", "", "{ENTER}")

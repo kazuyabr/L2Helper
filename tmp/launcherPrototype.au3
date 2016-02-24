@@ -5,8 +5,10 @@
 #include <TreeViewConstants.au3>
 
 
-Local $hGUI = GUICreate("L2Helper", 250, 150)
-$list = GUICtrlCreateTreeView(10, 10, 150, 130, $TVS_CHECKBOXES)
+Local $hGUI = GUICreate("L2Helper", 300, 250)
+Local $idTab = GUICtrlCreateTab(0, 0, 200, 200)
+GUICtrlCreateTabItem("Launcher")
+$list = GUICtrlCreateTreeView(50, 50, 150, 130, $TVS_CHECKBOXES)
 $char1 = GUICtrlCreateTreeViewItem("Char1", $list)
 $char2 = GUICtrlCreateTreeViewItem("Char2", $list)
 $char3 = GUICtrlCreateTreeViewItem("Char3", $list)
