@@ -6,6 +6,7 @@
 #include <ListviewConstants.au3>
 #include <StructureConstants.au3>
 #include <WindowsConstants.au3>
+#include <lib/hotkeys.au3>
 
 ;Reading all accounts info from ini
 $charactersRaw = IniReadSection("config.ini", "Characters")
@@ -60,7 +61,7 @@ While 1
 				If GUICtrlRead($chars[$i][0], $GUI_READ_EXTENDED) = $GUI_CHECKED Then
 					$pid = Run("L2Helper.exe " & $chars[$i][1] & " " & $chars[$i][2] & " " & $chars[$i][3], '', @SW_SHOW, $STDOUT_CHILD)
 					While 1
-						If StdoutRead($pid) = 'LoadEnd' Then ExitLoop
+						If StdoutRead($pid) <> '' Then ExitLoop
 						Sleep(1)
 					WEnd
 				EndIf
@@ -85,4 +86,4 @@ Func WM_NOTIFY($hWnd, $MsgID, $wParam, $lParam)
 	EndIf
 
 	Return $GUI_RUNDEFMSG
-EndFunc   ;==>WM_NOTIFY
+EndFunc

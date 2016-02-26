@@ -2,11 +2,9 @@ Func Login($login, $pass, $name)
     $startZeroPixel = 1212604
     $endZeroPixel = 526344
     Global $windowName = $name
-
-	Run(IniRead("config.ini", "settings", "l2.exe", ""))
-    WinWaitActive("c4classic.ru")
-    Global $windowHandle = WinGetHandle(IniRead("config.ini", "settings", "WindowName", ""))
-
+	$pid = Run(IniRead("config.ini", "settings", "l2.exe", ""))
+    Global $windowHandle = _GetHWNDFromPID($pid, IniRead('config.ini', 'Settings', 'WindowName', ''))
+	WinWaitActive($windowHandle)
 	;Wait while game loading
     While 1
 		If not WinExists($windowHandle) Then
@@ -26,7 +24,6 @@ Func Login($login, $pass, $name)
 	ControlSend($windowHandle, "", "", "{TAB}")
 	ControlSend($windowHandle, "", "", $pass)
 	Opt('SendKeyDownDelay', 5)
-
 	While 1
 		If Not WinExists($windowHandle) Then
 			Return False
@@ -40,5 +37,18 @@ Func Login($login, $pass, $name)
 		ControlSend($windowHandle, "", "", "{ENTER}")
 		ControlSend($windowHandle, "", "", "{TAB}")
 		Sleep(1000)
+	WEnd
+EndFunc
+
+;Getting window handle from pid and title. I dont know why all wont work when I'm use only pid, without window title.
+func _GetHWNDFromPID($PID, $title)
+    While 1
+		$WinList=WinList()
+		for $i=1 to $WinList[0][0]
+			if WinGetProcess($WinList[$i][1])=$PID AND $WinList[$i][0] = $title then
+				Return $WinList[$i][1]
+			EndIf
+		Next
+		Sleep(100)
 	WEnd
 EndFunc

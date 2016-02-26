@@ -11,6 +11,7 @@ EndIf
 
 If Not Login($cmdLine[1], $cmdLine[2], $cmdLine[3]) Then
 	MsgBox($MB_OK, "Ошибка", "Окно L2 было закрыто в процессе загрузки")
+	ConsoleWrite('Error')
 	Exit
 EndIf
 $windowSize = WinGetClientSize($windowHandle)
