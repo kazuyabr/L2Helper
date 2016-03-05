@@ -1,51 +1,59 @@
 #include-once
-;Передать 1 параметром название рецепта а вторым количество требуемого крафта
+#include <findimagecoords.au3>
+#include <getHeroStatus.au3>
 
-;x and y coord items and count
-Global $resultCount[2]
-$sscColor = 0xAB9385
-$resultCount[0] = 476;SSC
-$bsscColor = 3952249
-$resultCount[1] = 200;BSSC
+HotKeySet("{ESC}", "Term")
 
-;Передаем что крафтить и в каком количестве
-Func Autocraft($item, $count)
-   WinActivate("Bronzebeard")
-   Send("{F11}")
-   Sleep(1000)
-   Send("{F12}")
-   Sleep(2000)
-
-   Switch $item
-   case "SSC"
-	  $coord = PixelSearch(0, 0, 1366, 768, 0xAB9385)
-	  $x = $coord[0]
-	  $y = $coord[1]
-	  $i = $count / $resultCount[0]
-   case "BSSC"
-	  $coord = PixelSearch(0, 0, 1366, 768, 3952249)
-	  $x = $coord[0]
-	  $y = $coord[1]
-	  $i = $count / $resultCount[1]
-   EndSwitch
-
-   MouseClick("left", $x, $y, 2)
-   Sleep(1000)
-
-   ;Крутить цикл и спать пока нет мп или окно не в фокусе
-   While ($i <> 0 and $i > 0)
-	  While 1
-		 If (PixelGetColor(58, 58) = 1057858) or (WinActive("Bronzebeard") = 0) Then
-			sleep(10000)
-		 Else
-			ExitLoop
-		 EndIf
-	  WEnd
-
-	  MouseClick("left", 422, 676, 1)
-	  Sleep(Random(1000, 2500, 1))
-	  $i = $i - 1
-   WEnd
+Func Term()
+	Exit
 EndFunc
 
-Autocraft("SSC", 1000)
+Func Craft($item, $count, $useRecharge)
+	Opt("SendKeyDownDelay", 30)
+	$crafterName = IniRead("config.ini", "craft", "CrafterName", "")
+	$rechargerName = IniRead("config.ini", "craft", "RechargerName", "")
+	$rechargeTimeout = IniRead("config.ini", "craft", "RechargeTimeout", "")
+	$rechargeCount = IniRead("config.ini", "craft", "RechargeCount", "")
+	$regenTimeout = IniRead("config.ini", "craft", "RegenTimeout", "")
+	WinActivate($crafterName)
+	WinWaitActive($crafterName)
+	Send("{ENTER}/stand{ENTER}")
+	Sleep(2000)
+	Send("{ENTER}/useskill Dwarven Craft{ENTER}")
+	Sleep(1000)
+	Send("{ENTER}/sit{ENTER}")
+	$coords = findImageCoords($item, "center", True)
+	MouseClick("left", $coords[0], $coords[1], 2)
+	$coords = findImageCoords("createButton", "center", True)
+	MouseMove($coords[0], $coords[1])
+	$iCraft = Floor($count/IniRead("craft.ini", $item, "count", ""))
+	While $iCraft > 0
+		WinActivate($crafterName)
+		WinWaitActive($crafterName)
+		$mp = getHeroStatus($crafterName, "mp")
+
+		If $mp < 20 Then
+			If $useRecharge = True Then
+				WinActivate($rechargerName)
+				WinWaitActive($rechargerName)
+				If getHeroStatus($rechargerName, "mp") > 30 Then
+					Send("{Enter}/stand{ENTER}")
+					Sleep(2000)
+					Send("{Enter}/target " & $crafterName & "{ENTER}")
+					For $i = 1 To $rechargeCount
+						Send("{Enter}/useskill Recharge{ENTER}")
+						Sleep($rechargeTimeout)
+					Next
+				Else
+					Send("{Enter}/sit{ENTER}")
+					Sleep($regenTimeout)
+				EndIf
+			Else
+				Sleep($regenTimeout)
+			EndIf
+		Else
+			MouseClick("left", $coords[0], $coords[1])
+			$iCraft -= 1
+		EndIf
+	WEnd
+EndFunc

@@ -14,7 +14,7 @@ If Not Login($cmdLine[1], $cmdLine[2], $cmdLine[3]) Then
 	ConsoleWrite('Error')
 	Exit
 EndIf
-$windowSize = WinGetClientSize($windowHandle)
+
 WinSetTitle($windowHandle, "", $windowName)
 ConsoleWrite('LoadEnd')
 

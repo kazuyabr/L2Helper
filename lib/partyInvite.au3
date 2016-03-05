@@ -16,3 +16,6 @@ Func inviteToParty($leaderName, $memberName)
 	WinActivate($leaderHwnd)
 	WinWaitActive($leaderHwnd)
 EndFunc
+
+inviteToParty("Bronzebeard", "Praudmoore")
+inviteToParty("Bronzebeard", "Whisperwind")

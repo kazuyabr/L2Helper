@@ -12,6 +12,7 @@
 $charactersRaw = IniReadSection("config.ini", "Characters")
 If @error Then
 	MsgBox($MB_OK, "Ошибка", "config.ini не найден, либо пуст")
+	Exit
 EndIf
 $charsCount = $charactersRaw[0][0]
 Local $chars[$charsCount][4]
