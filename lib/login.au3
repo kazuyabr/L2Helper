@@ -1,8 +1,23 @@
 Func Login($login, $pass, $name)
-	$startZeroPixel = 1212604
+	;VMWare have several differences in work
+	$vmware = ProcessExists("vmtoolsd.exe")
+
+	If $vmware > 0 Then
+		$startZeroPixel = 489654
+	Else
+		$startZeroPixel = 1212604
+	EndIf
+
 	$endZeroPixel = 526344
+
 	Global $windowName = $name
 	$pid = Run(IniRead("config.ini", "settings", "l2.exe", ""))
+
+	If $vmware > 0 Then
+		WinWaitActive("Warning")
+		Send("{ENTER}")
+	EndIf
+
 	Global $windowHandle = _GetHWNDFromPID($pid, "c4classic.ru")
 	WinWaitActive($windowHandle)
 	;Wait while game loading

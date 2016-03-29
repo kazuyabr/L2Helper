@@ -7,13 +7,13 @@ Func getHeroStatus($windowHandle, $parameter)
 	$startX = $leftBarZeroCoord[0] + 16
 	Switch $parameter
 		Case "cp"
-			$y = $leftBarZeroCoord[1] + 26
+			$y = $leftBarZeroCoord[1] + 25
 			$fullColor = 0xC68E31
 		Case "hp"
-			$y = $leftBarZeroCoord[1] + 40
+			$y = $leftBarZeroCoord[1] + 39
 			$fullColor = 0xD60831
 		Case "mp"
-			$y = $leftBarZeroCoord[1] + 54
+			$y = $leftBarZeroCoord[1] + 53
 			$fullColor = 0x0071CE
 	EndSwitch
 	$RightBarZeroCoord = findimagecoords("charStatusRight", "lefttop", False)

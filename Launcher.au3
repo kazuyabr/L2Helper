@@ -25,7 +25,7 @@ Local $hGUI = GUICreate("L2Helper", 300, 250)
 ;Launcher tab
 GUICtrlCreateTab(0, 0, 300, 250)
 GUICtrlCreateTabItem("Launcher")
-$charList = GUICtrlCreateListView('Character Name  ', 5, 25, 130, 220, BitOR($LVS_NOCOLUMNHEADER, $LVS_SINGLESEL), $LVS_EX_CHECKBOXES)
+$charList = GUICtrlCreateListView('Character Name  ', 5, 25, 140, 220, BitOR($LVS_NOCOLUMNHEADER, $LVS_SINGLESEL), $LVS_EX_CHECKBOXES)
 For $i = 1 To $charsCount
 	$tmp = StringSplit($charactersRaw[$i][1], ":")
 	$chars[$i - 1][1] = $tmp[1]
@@ -39,13 +39,13 @@ $runButton = GUICtrlCreateButton("Run", 180, 75, 100, 25)
 GUICtrlCreateTabItem("")
 
 ;Crafter tab
-$recipes = IniReadSectionNames("craft.ini")
-_ArrayDelete($recipes, 0)
-GUICtrlCreateTabItem("Crafter")
-$craftList = GUICtrlCreateListView('Recipe|Count', 5, 25, 130, 220,$LVS_SINGLESEL, $LVS_EX_CHECKBOXES)
-For $recipe In $recipes
-	GUICtrlCreateListViewItem($recipe, $craftList)
-	Next
+;$recipes = IniReadSectionNames("craft.ini")
+;_ArrayDelete($recipes, 0)
+;GUICtrlCreateTabItem("Crafter")
+;$craftList = GUICtrlCreateListView('Recipe|Count', 5, 25, 130, 220,$LVS_SINGLESEL, $LVS_EX_CHECKBOXES)
+;For $recipe In $recipes
+;	GUICtrlCreateListViewItem($recipe, $craftList)
+;	Next
 
 
 GUISetState(@SW_SHOW, $hGUI)
