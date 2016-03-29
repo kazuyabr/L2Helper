@@ -3,7 +3,7 @@ Func Login($login, $pass, $name)
 	$endZeroPixel = 526344
 	Global $windowName = $name
 	$pid = Run(IniRead("config.ini", "settings", "l2.exe", ""))
-	Global $windowHandle = _GetHWNDFromPID($pid, IniRead('config.ini', 'Settings', 'WindowName', ''))
+	Global $windowHandle = _GetHWNDFromPID($pid, "c4classic.ru")
 	WinWaitActive($windowHandle)
 	;Wait while game loading
 	While 1
