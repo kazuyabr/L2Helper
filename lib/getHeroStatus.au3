@@ -3,7 +3,8 @@
 
 ;parameter - hp, mp or cp
 Func getHeroStatus($windowHandle, $parameter)
-	$leftBarZeroCoord = findimagecoords("charStatusLeft", "lefttop", False)
+	$leftBarZeroCoord = findimagecoords("charStatusLeft", "lefttop", $windowHandle, False)
+	If $leftBarZeroCoord = False Then Return False
 	$startX = $leftBarZeroCoord[0] + 16
 	Switch $parameter
 		Case "cp"
@@ -16,7 +17,7 @@ Func getHeroStatus($windowHandle, $parameter)
 			$y = $leftBarZeroCoord[1] + 53
 			$fullColor = 0x0071CE
 	EndSwitch
-	$RightBarZeroCoord = findimagecoords("charStatusRight", "lefttop", False)
+	$RightBarZeroCoord = findimagecoords("charStatusRight", "lefttop", $windowHandle, False)
 	$endX = $RightBarZeroCoord[0] - 4
 	$barFull = 0
 	$barEmpty = 0

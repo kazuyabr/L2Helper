@@ -1,19 +1,25 @@
 #include-once
-#include "BmpSearch.au3"
+#include "utils\BmpSearch.au3"
 #include <ScreenCapture.au3>
 #include <GDIPlus.au3>
 #include <WinAPI.au3>
 
 ;$name - image name from res/img/ folder
 ;$position - center, lefttop, leftbottom, righttop, rightbottom
-;return array where [0] - x, [1] - y coordinate
-Func FindImageCoords($name, $position, $mouseFromScreen)
-	If $mouseFromScreen = True Then MouseMove(@DesktopWidth, @DesktopHeight)
+;return array where [0] - x, [1] - y coordinate or False if search it was unsuccessful
+Func FindImageCoords($name, $position, $windowHandle, $mouseFromScreen)
+	If $mouseFromScreen = True Then
+		$winPos = WinGetPos($windowHandle)
+		$winSize = WinGetClientSize($windowHandle)
+		MouseMove($winPos[0] + $winSize[0], $winPos[1] + $winSize[1])
+	EndIf
+
 	$image = 'res\img\' & $name & '.bmp'
 
-	_GDIPlus_Startup()
 	_ScreenCapture_SetBMPFormat(0)
-	_ScreenCapture_Capture('tmp.bmp')
+	_ScreenCapture_CaptureWnd('tmp.bmp', $windowHandle, 0, 0, -1, -1, False)
+
+	_GDIPlus_Startup()
 	$source = _GDIPlus_BitmapCreateFromFile('tmp.bmp')
 	$hSource = _GDIPlus_BitmapCreateHBITMAPFromBitmap($source)
 	$find = _GDIPlus_BitmapCreateFromFile($image)
@@ -27,7 +33,7 @@ Func FindImageCoords($name, $position, $mouseFromScreen)
 	_GDIPlus_Shutdown()
 	FileDelete("tmp.bmp")
 
-	If @error Then
+	If $aCoords = 0 Then
 		Return False
 	Else
 		Local $coords[2]
@@ -50,4 +56,4 @@ Func FindImageCoords($name, $position, $mouseFromScreen)
 		EndSwitch
 		Return $coords
 	EndIf
-EndFunc   ;==>FindImageCoords
+EndFunc

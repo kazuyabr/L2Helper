@@ -13,9 +13,6 @@ Func WindowSwitch()
 	$nickname = IniRead('config.ini', 'Hotkeys', @HotKeyPressed, '')
 	if WinExists($nickname) Then
 		WinActivate($nickname)
-		WinWaitActive($nickname)
-		;need for remove focus from chat window
-		MouseClick("right")
 	EndIf
 EndFunc
 
