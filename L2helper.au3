@@ -10,8 +10,11 @@ If $cmdLine[0] = 0 Then
 	Exit
 EndIf
 
+;Default 5 ms delay to small for login window and with 5ms to much bugs in game
+Opt("SendKeyDownDelay", IniRead("config.ini", "settings", "LoginKeyDelay", ""))
 
-If Not Login($cmdLine[1], $cmdLine[2], $cmdLine[3]) Then
+
+If Not Login($cmdLine[1], $cmdLine[2], $cmdLine[3], $cmdLine[4]) Then
 	Switch @error
 		Case 1
 			ConsoleWrite("L2.exe not found. Check config.ini")
@@ -57,6 +60,12 @@ While (WinGetState($windowHandle) <> 0)
 					ConsoleWrite(@CRLF & "Craft Failed!:(")
 				Else
 					ConsoleWrite("Craft complete successful!")
+					ConsoleWrite(@CRLF & "Starting trade...")
+					If StartTrade(IniRead("config.ini", "craft", "CrafterName", ""), IniRead("Config.ini", $call[2], "trader", ""), $call[2]) = True Then
+						ConsoleWrite("Trade start successful!")
+					Else
+						ConsoleWrite("Something went wrong... :(")
+					EndIf
 				EndIf
 		EndSwitch
 	EndIf

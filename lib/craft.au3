@@ -6,7 +6,6 @@
 ; 3 - can't find crafter status bar, 4 - cant find recharger status bar, 5 - interrupted by the user
 Func Craft($item, $count, $useRecharge)
 	SetError(0)
-	Opt("SendKeyDownDelay", 10)
 	$crafterName = IniRead("config.ini", "craft", "CrafterName", "")
 	$crafterHandle = WinGetHandle($crafterName)
 	$regenTimeout = IniRead("config.ini", "craft", "RegenTimeout", "")
@@ -36,7 +35,6 @@ Func Craft($item, $count, $useRecharge)
 	EndIf
 	MouseClick("left", $coords[0], $coords[1], 2)
 	$coords = findImageCoords("createButton", "center", $crafterHandle,  True)
-	$coords = findImageCoords($item, "center", $crafterHandle, True)
 	If $coords = False Then
 		SetError(2)
 		Return False
@@ -91,38 +89,52 @@ Func Craft($item, $count, $useRecharge)
 	Return True
 EndFunc
 
-Func StartTrade($crafter, $trader, $item, $price)
-	Opt("SendKeyDownDelay", 10)
-	$crafterHandle = WinGetHandle($crafter)
-	$traderHandle = WinGetHandle($trader)
+Func StartTrade($crafter, $trader, $item)
+	$crafterHandle = HWnd(IniRead($tempfile, "windowHandles", $crafter, ""))
+	;TODO Имя окна и имя крафтера не совпадает
+	$traderHandle = HWnd(IniRead($tempfile, "windowHandles", $trader, ""))
+	$price = IniRead("craft.ini", $item, "price", "")
+	$message = StringUpper($item) & " " & $price
+
+	;Give all crafted production from crafter to trader
+	;Give all adena from trader to crafter
 	WinActivate($crafterHandle)
 	WinWaitActive($crafterHandle)
 	ClickCloseButton($crafterHandle)
 	Send("{ENTER}/stand{ENTER}")
+	Sleep(500)
 	Send("{ENTER}/target " & $trader & "{ENTER}")
+	Sleep(500)
 	Send("{ENTER}/trade{ENTER}")
 	WinActivate($traderHandle)
 	WinWaitActive($traderHandle)
 	ClickYesButton($traderHandle)
-	$coord = FindImageCoords("adena", "center", $traderHandle, True)
+	$coords = FindImageCoords("adena", "center", $traderHandle, True)
 	MouseClick("left", $coords[0], $coords[1], 2)
-	giveAll()
+	giveAll($traderHandle)
 	WinActivate($crafterHandle)
 	WinWaitActive($crafterHandle)
-	$coord = FindImageCoords($item, "center", $crafterHandle, True)
+	$coords = FindImageCoords($item, "center", $crafterHandle, True)
 	MouseClick("left", $coords[0], $coords[1], 2)
-	giveAll()
+	giveAll($traderHandle)
 	ClickOkButton($crafterHandle)
 	WinActivate($traderHandle)
 	WinWaitActive($traderHandle)
 	ClickOkButton($traderHandle)
 
+	;start trade all recieving production from crafter
 	Send("{ENTER}/vendor{ENTER}")
+	Sleep(500)
 	$coord = FindImageCoords($item, "center", $traderHandle, True)
 	MouseClick("left", $coords[0], $coords[1], 2)
 	Send($price)
-	$coord = FindImageCoords("allButton", "lefttop", $traderHandle, True)
-	MouseClick("left", $coords[0] - 201, $coords[1])
+	ClickOkButton($traderHandle)
 	giveAll($traderHandle)
+	SetTradeMessage($traderHandle, $message)
+	TradeStart($traderHandle)
+	Send("{ENTER}offline{ENTER}")
+	Sleep(500)
+	WinClose($traderHandle)
 
+	Return True
 EndFunc

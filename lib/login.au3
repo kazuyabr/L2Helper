@@ -4,11 +4,13 @@
 ;@error codes: 1 - exe not found, 2 - window is closing during login process
 ;3 - can't find enter button on screen more than 1 minute
 ;4 - can't find char status bar on screen more than 1 minute
-Func Login($login, $pass, $name)
+Func Login($login, $pass, $name, $tempfilename)
+
 	SetError(0)
 	;VMWare have several differences in work
 	$vmware = ProcessExists("vmtoolsd.exe")
 
+	Global $tempfile = $tempfilename
 	Global $windowName = $name
 	$pid = Run(IniRead("config.ini", "settings", "l2.exe", ""))
 	If $pid = 0 Then
@@ -22,6 +24,7 @@ Func Login($login, $pass, $name)
 	EndIf
 
 	Global $windowHandle = _GetHWNDFromPID($pid, "c4classic.ru")
+	FileWrite($tempfile, $name & " = " & $windowHandle & @CRLF)
 	WinWaitActive($windowHandle)
 
 	$timer = TimerInit()
@@ -44,14 +47,10 @@ Func Login($login, $pass, $name)
 		Sleep(100)
 	WEnd
 
-	;Default 5 ms delay to small for login window and with 5ms to much bugs
-	Opt('SendKeyDownDelay', IniRead("config.ini", "settings", "LoginKeyDelay", ""))
-
 	;Login
 	ControlSend($windowHandle, "", "", $login)
 	ControlSend($windowHandle, "", "", "{TAB}")
 	ControlSend($windowHandle, "", "", $pass)
-	Opt('SendKeyDownDelay', 5)
 
 	$timer = TimerInit()
 	While 1
@@ -60,8 +59,9 @@ Func Login($login, $pass, $name)
 			Return False
 		EndIf
 
-		$charStatusLeft = findImageCoords("charStatusLeft", "lefttop", $windowHandle, True)
-		If $charStatusLeft <> False Then
+		$startButton = findImageCoords("startButton", "lefttop", $windowHandle, True)
+		If $startButton <> False Then
+			ControlSend($windowHandle, "", "", "{ENTER}")
 			Return True
 		EndIf
 

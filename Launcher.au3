@@ -2,7 +2,11 @@
 #include <Constants.au3>
 #include <GUIConstantsEx.au3>
 #include <StructureConstants.au3>
-#include "lib\launcher\hotkeys.au3"
+#include <File.au3>
+
+;Creating temp file, where we storing window handles
+$tempfile = _TempFile()
+FileWrite($tempfile, "[windowHandles]" & @CRLF)
 
 ;Reading all accounts info from ini
 $charactersRaw = IniReadSection("config.ini", "Characters")
@@ -76,6 +80,7 @@ While 1
 			CraftItButton()
 
 		Case $GUI_EVENT_CLOSE
+			FileDelete($tempfile)
 			ExitLoop
 	EndSwitch
 
